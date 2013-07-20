@@ -108,9 +108,9 @@
                 <p ng-repeat="m in media | filter:!active">
                     <strong><em>Now Playing</em>: {{m.index+1}} - {{m.artist}} - {{m.title}}</strong>
                     <audio controls><source src="upload/{{m.filename}}"></audio>
-                    <br />
-                    <input type="button" value="&laquo; Prev" ng-click="prev()" />
-                    <input type="button" value="Next &raquo;" ng-click="next()" />
+                    
+                    <input type="button" value="&laquo;" ng-click="prev()" class="player_control" />
+                    <input type="button" value="&raquo;" ng-click="next()" class="player_control" />
                     <br />
                     Control here or click a song number to jump to that song.
                 </p>

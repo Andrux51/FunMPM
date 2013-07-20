@@ -37,4 +37,17 @@
 	background-color:#111;
 	color:#fff;
 	padding:20px;
+	border:3px solid #bbb;
+	border-radius: 10px;
+}
+
+.player_control {
+	background:none;
+	border:none;
+	font-size:20px;
+	color:white;
+	vertical-align: 10px;
+}
+.player_control:hover {
+	color:#ace;
 }
