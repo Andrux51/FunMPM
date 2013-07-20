@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+  <head>
+    <meta charset="utf-8">
+    <title>Fun Media Playlist Maker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="stylesheet.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.1/angular.min.js"></script>
+    <script src="controller.js"></script>
+  </head>
+
+  <body ng-controller="MediaListCtrl">
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="index.html">FunMPM</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="index.html">Home</a></li>
+              <li class="active"><a href="playlist.html">Playlist</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+    	<div class="row">
+            <div class="span5" id="file_drop">
+                <div id="drop_zone">Drop Files Here!</div>
+                <output id="list"></output>
+                <!-- Put file handling JavaScript here... -->
+                <script>
+                  function handleFileDragDrop(_event) {
+                    _event.stopPropagation();
+                    _event.preventDefault();
+
+                    var files = _event.dataTransfer.files;
+                    for (var i = 0, f; f = files[i]; i++) {
+                        var scope = angular.element(document.getElementsByTagName('body')).scope();
+                        var ind = scope.media.length;
+                        scope.$apply(function() {
+                            scope.media.push({"index":ind,"filename":f.name,"title":'No Title Given',"artist":'No Artist Given',"album":'No Album Given',"active":false});
+                        })
+                    }
+                  }
+
+                  function handleDragOver(_event) {
+                    _event.stopPropagation();
+                    _event.preventDefault();
+                    _event.dataTransfer.dropEffect = 'copy';
+                  }
+
+                  // Setup the dnd listeners.
+                  var dropZone = document.getElementById('file_drop');
+                  dropZone.addEventListener('dragover', handleDragOver, false);
+                  dropZone.addEventListener('drop', handleFileDragDrop, false);
+                </script>
+            </div>
+            <div class="span1" style="text-align:center; line-height:80px;">
+                <p>OR</p>
+            </div>
+            <div class="span5" id="file_chooser">
+                <input type="file" id="files" name="files[]" accept="audio/*" multiple />
+                <output id="list2"></output>
+                <!-- Put file handling JavaScript here... -->
+                <script>
+                    function handleFileSelect(_event) {
+                      var files = _event.target.files;
+                      for (var i = 0, f; f = files[i]; i++) {
+                        var scope = angular.element(document.getElementsByTagName('body')).scope();
+                        var ind = scope.media.length;
+                        scope.$apply(function() {
+                            scope.media.push({"index":ind,"filename":f.name,"title":'No Title Given',"artist":'No Artist Given',"album":'No Album Given',"active":false});
+                        })
+                      }
+                    }
+
+                    document.getElementById('files').addEventListener('change', handleFileSelect, false);
+                </script>
+            </div>
+        </div>
+        <br />
+
+    	<div class="row">
+    		<div class="span4" id="mplayer">
+                <p ng-repeat="m in media | filter:!active">
+                    <strong><em>Now Playing</em>: {{m.index+1}} - {{m.artist}} - {{m.title}}</strong>
+                    <audio controls><source src="upload/{{m.filename}}"></audio>
+                    <br />
+                    <input type="button" value="&laquo; Prev" ng-click="prev()" />
+                    <input type="button" value="Next &raquo;" ng-click="next()" />
+                    <br />
+                    Control here or click a song number to jump to that song.
+                </p>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="span12">
+                <table width="100%" border=1 id="play_table">
+    				<thead>
+	    				<tr>
+                            <th>#</th>
+	    					<th>Track Title</th>
+	    					<th>Track Artist</th>
+	    					<th>Track Album</th>
+	    					<th>File Name</th>
+	    				</tr>
+    				</thead>
+    				<tbody id="play_table_body">
+	    				<tr ng-repeat="track in media" ng-class-odd="'odd'" ng-class-even="'even'" ng-class="{active_song:track.active}">
+                            <td width="30px" align="center"><a href="#" ng-click="jump($index)">{{track.index+1}}</a></td>
+	    					<td ng-hide="editTitle">{{track.title}} <a href="#" ng-click="editTitle=!editTitle">Edit</a></td>
+	    					<td ng-show="editTitle"><input ng-model="track.title"><a href="#" ng-click="editTitle=!editTitle">Save</a></td>
+	    					<td ng-hide="editArtist">{{track.artist}} <a href="#" ng-click="editArtist=!editArtist">Edit</a></td>
+	    					<td ng-show="editArtist"><input ng-model="track.artist"><a href="#" ng-click="editArtist=!editArtist">Save</a></td>
+	    					<td ng-hide="editAlbum">{{track.album}} <a href="#" ng-click="editAlbum=!editAlbum">Edit</a></td>
+	    					<td ng-show="editAlbum"><input ng-model="track.album"><a href="#" ng-click="editAlbum=!editAlbum">Save</a></td>
+	    					<td ng-hide="editFilename">{{track.filename}} <a href="#" ng-click="editFilename=!editFilename">Edit</a></td>
+                            <td ng-show="editFilename"><input ng-model="track.filename"><a href="#" ng-click="editFilename=!editFilename">Save</a></td>
+	    				</tr>
+	    			</tbody>
+    			</table>
+    		</div>
+    	</div>
+    </div>
+  </body>
+</html>

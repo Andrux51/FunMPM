@@ -1,0 +1,40 @@
+#file_drop {
+	border:2px dashed #bbb;
+	border-radius:10px;
+	text-align:center;
+	padding:30px 0 30px 0;
+	font-size:20px;
+	color:#bbb;
+}
+
+#file_chooser {
+	border:2px dashed #bbb;
+	border-radius:10px;
+	text-align:center;
+	padding:30px 0 30px 0;
+}
+
+#play_table th {
+	background-color:#ace;
+}
+
+#play_table tr.odd {
+	background-color:#eee;
+}
+#play_table tr.even {
+	background-color:#ddd;
+}
+#play_table tr:hover {
+	background-color:#def;
+}
+
+.active_song {
+	font-weight:bold;
+	background-color:#00f;
+}
+
+#mplayer {
+	background-color:#111;
+	color:#fff;
+	padding:20px;
+}
